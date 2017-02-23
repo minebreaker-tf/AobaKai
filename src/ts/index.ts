@@ -3,15 +3,31 @@ import VueRouter = require('vue-router');
 
 Vue.use(VueRouter);
 
-const Foo = { template: '<div>foo</div>' };
-const Bar = { template: '<div>bar</div>' };
+const main = {
+    name: 'main',
+    template: `
+    <div>
+        {{ $route.path }}
+        <div v-text="content"></div>
+        <div v-html="content"></div>
+    </div>`,
+    watch: {
+        '$route': (to: any, from: any) => {
+            console.log(to);
+            console.log(from);
+        }
+    },
+    data: () => {
+        return {
+            content: '<b>Hoge</b>'
+        }
+    }
+};
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
-        { path: '/foo', component: Foo },
-        { path: '/bar', component: Bar },
-        { path: '*', component: { template: '<div>not found</div>' } }
+        { path: '*', component: main }
     ]
 });
 
