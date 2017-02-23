@@ -1,0 +1,5 @@
+AobaKai.iml
+.idea/
+build/
+node_modules/
+public/
