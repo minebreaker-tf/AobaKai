@@ -1,34 +1,27 @@
 import Vue = require('vue');
 import VueRouter = require('vue-router');
 
+import articleView from './article';
+
 Vue.use(VueRouter);
 
-const main = {
-    name: 'main',
+Vue.component('articleView', articleView);
+
+const root: Vue.Component = {
+    name: 'root',
     template: `
     <div>
-        {{ $route.path }}
-        <div v-text="content"></div>
-        <div v-html="content"></div>
-    </div>`,
-    watch: {
-        '$route': (to: any, from: any) => {
-            console.log(to);
-            console.log(from);
-        }
-    },
-    data: () => {
-        return {
-            content: '<b>Hoge</b>'
-        }
-    }
+        <a href="/foo">foo</a>
+        <router-link to="/foo">Go to Foo</router-link><br />
+        <article-view></article-view>
+    </div>`
 };
 
 const router = new VueRouter({
-    mode: 'history',
+    // mode: 'history',
     routes: [
-        { path: '*', component: main }
+        { path: '*', component: root }
     ]
 });
 
-const app = new Vue({ router }).$mount('#app');
+new Vue({ router }).$mount('#app');
