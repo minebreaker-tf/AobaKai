@@ -8,6 +8,8 @@ let globalState: State = {
     title: 'hoge'
 };
 
-function state(modifier: Modifier): void {
+const state = function (modifier: Modifier): void {
     globalState = modifier(globalState);
-}
+};
+
+export default state;

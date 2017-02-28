@@ -7,7 +7,7 @@
     "strictNullChecks": true
   },
   "include": [
-    "./src/ts/*.ts"
+    "./src/ts/**/*.ts"
   ],
   "exclude": [
     "node_modules"

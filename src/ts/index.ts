@@ -5,20 +5,19 @@ import articleView from './article';
 
 Vue.use(VueRouter);
 
-Vue.component('articleView', articleView);
-
-const root: Vue.Component = {
+const root: any = {
     name: 'root',
     template: `
     <div>
-        <a href="/foo">foo</a>
-        <router-link to="/foo">Go to Foo</router-link><br />
         <article-view></article-view>
-    </div>`
+    </div>`,
+    components: {
+        articleView: articleView
+    }
 };
 
 const router = new VueRouter({
-    // mode: 'history',
+    mode: 'history',
     routes: [
         { path: '*', component: root }
     ]

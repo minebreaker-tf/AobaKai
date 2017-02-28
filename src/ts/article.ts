@@ -1,4 +1,5 @@
 import Vue = require('vue');
+import marked = require('marked');
 
 import ajax from './fetch';
 
@@ -30,7 +31,7 @@ const articleView: Vue.ComponentOptions<ArticleContentData> = {
     template: `
     <div>
         <article-title :title="title"></article-title>
-        <article-content :content="contentRawHtml"></article-conent>
+        <article-content :content="contentRawHtml" class="marked"></article-conent>
     </div>`,
     data: () => {
         return {
@@ -39,10 +40,20 @@ const articleView: Vue.ComponentOptions<ArticleContentData> = {
         }
     },
     beforeCreate: function () {
-        ajax('text.html', response => {
-            console.log(this.$route.path);
+        console.log(this.$route.path);
+        const index = this.$route.path === '/' ? 'index.md' : '';
+        const addr = 'content' + this.$route.path + index;
+        ajax(addr, response => {
             console.log(response);
-            this.contentRawHtml = response;
+            this.contentRawHtml = marked(response);
+            const list = document.querySelectorAll('a');
+            console.log(list);
+            for (let i = 0; list.length; i++) {
+                const e = list.item(i);
+                console.log(e);
+            }
+        }, (status: number, desc: string) => {
+            this.title = `${status} ${desc}`;
         });
     },
     watch: {
