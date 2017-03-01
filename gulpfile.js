@@ -2,16 +2,23 @@ const gulp = require('gulp');
 const ts = require('gulp-typescript');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
+var rimraf = require('rimraf');
+
+gulp.task('clean', function (callback) {
+    return rimraf('./public', callback);
+});
 
 gulp.task('env', function () {
     // process.env.NODE_ENV = 'production'; // Vueはminifyしないとだめらしい
 });
 
 gulp.task('copy', function () {
-    gulp.src('src/ts/index.html')
+    gulp.src(['src/ts/index.html', 'src/ts/index.css'])
         .pipe(gulp.dest('./public/'));
-    gulp.src('src/ts/index.css')
-        .pipe(gulp.dest('./public/'));
+    gulp.src('content/*')
+        .pipe(gulp.dest('./public/content'));
+    gulp.src('content/subdir/*')
+        .pipe(gulp.dest('./public/content/subdir'));
 });
 
 gulp.task('compile', ['env'], function () {

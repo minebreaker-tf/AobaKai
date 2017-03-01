@@ -1,29 +1,65 @@
 import Vue = require('vue');
 import marked = require('marked');
 
-import ajax from './fetch';
+interface ArticleTitleData extends Vue {
+    title: string
+}
 
-const articleTitle: Vue.ComponentOptions<Vue> = {
+const articleTitle: Vue.ComponentOptions<ArticleTitleData> = {
     name: 'article-title',
     props: ['title'],
-    template: `<h1>{{ title }}</h1>`
-};
-
-const articleContent: Vue.ComponentOptions<Vue> = {
-    name: 'article-content',
-    props: ['content'],
-    template: `
-    <div>
-        <div v-html="content"></div>
-        <!--<div v-text="content"></div>-->
-    </div>`
+    template: `<h1>{{ title }}</h1>`,
+    watch: {
+        'title': function () {
+            document.getElementsByTagName('title').item(0).text = this.title;
+        }
+    }
 };
 
 interface ArticleContentData extends Vue {
-    title: string,
-    url: string,
-    contentRawHtml: string
+    title: string
+    url: string
+    articleContent: Vue.Component
 }
+
+type ArticleSetter = (articleContent: Vue.Component) => void;
+type ArticleTitleSetter = (title: string) => void;
+
+function requestArticle(path: string, setter: ArticleSetter, titleSetter: ArticleTitleSetter) {
+    const index = path === '/' ? 'index' : '';
+    const addr = '/content' + path + index;
+
+    // target = es5 だとPromise.allが使えない... Babelいれる?
+    fetch(addr + '.md')
+        .then(r => {
+            if (r.ok) {
+                return r.text();
+            } else {
+                return `<div>We're sorry, something is wrong with the server.</div>`
+            }
+        })
+        .then(t => {
+            const raw = '<div>' + marked(t, { renderer: new ModifiedRenderer() });
+            setter({
+                name: 'article-content',
+                template: `<div> ${raw} </div>`
+            });
+        });
+
+    fetch(addr + '.json')
+        .then(r => {
+            if (r.ok) {
+                return r.json();
+            } else {
+                return {
+                    title: `${r.status} ${r.statusText}`
+                };
+            }
+        })
+        .then((obj: any) => {
+            titleSetter(obj.title);
+        });
+};
 
 const articleView: Vue.ComponentOptions<ArticleContentData> = {
     name: 'article-view',
@@ -31,41 +67,59 @@ const articleView: Vue.ComponentOptions<ArticleContentData> = {
     template: `
     <div>
         <article-title :title="title"></article-title>
-        <article-content :content="contentRawHtml" class="marked"></article-conent>
+        <component v-bind:is="articleContent"></component>
     </div>`,
     data: () => {
         return {
             title: 'hoge',
-            contentRawHtml: ''
+            articleContent: {
+                name: 'default-article-content',
+                template: '<div></div>'
+            }
         }
     },
     beforeCreate: function () {
-        console.log(this.$route.path);
-        const index = this.$route.path === '/' ? 'index.md' : '';
-        const addr = 'content' + this.$route.path + index;
-        ajax(addr, response => {
-            console.log(response);
-            this.contentRawHtml = marked(response);
-            const list = document.querySelectorAll('a');
-            console.log(list);
-            for (let i = 0; list.length; i++) {
-                const e = list.item(i);
-                console.log(e);
-            }
-        }, (status: number, desc: string) => {
-            this.title = `${status} ${desc}`;
+        requestArticle(this.$route.path, (article) => {
+            this.articleContent = article;
+        }, (title) => {
+            this.title = title;
         });
     },
     watch: {
-        '$route': (to: any, from: any) => {
-            console.log(to);
-            console.log(from);
+        '$route': function (to: any, from: any) { // TODO Type
+            requestArticle(to.path, (article) => {
+                this.articleContent = article;
+            }, (title) => {
+                this.title = title;
+            });
         }
     },
     components: {
-        articleTitle: articleTitle,
-        articleContent: articleContent
+        articleTitle
     }
 };
+
+class ModifiedRenderer extends marked.Renderer {
+    // エスケープ処理は実装しないので注意
+    link(href: string, title: string, text: string): string {
+
+        // スラッシュで始まるURLは内部のリンクとみなし、Vueコンポーネントを利用する
+        if (href.charAt(0) === '/') {
+            let out = '<router-link to="' + href + '"';
+            if (title) {
+                out += ' title="' + title + '"';
+            }
+            out += '>' + text + '</router-link>';
+            return out;
+        } else {
+            let out = '<a href="' + href + '"';
+            if (title) {
+                out += ' title="' + title + '"';
+            }
+            out += ' target="_blank">' + text + '</a>';
+            return out;
+        }
+    }
+}
 
 export default articleView;

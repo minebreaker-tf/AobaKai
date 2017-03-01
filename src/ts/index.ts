@@ -10,9 +10,10 @@ const root: any = {
     template: `
     <div>
         <article-view></article-view>
+        <!--<router-link to="home">Home</router-link>-->
     </div>`,
     components: {
-        articleView: articleView
+        articleView
     }
 };
 
