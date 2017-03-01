@@ -10,20 +10,24 @@ ABCabc123
 
 *ITALIC* **BOLD** ***ITALICBOLD*** ~~NOT~~
 
+Ordered List
+
 1. A
 2. B
 3. C
 
-* 1
-* 2
-* 3
+Unordered List
+
+* A
+* B
+* C
 
 ---------------
 
 > Don't think of yourself as an organic pain collector racing toward oblivion. 
-> <footer>Dogbert in <cite title="Dilbert">Dilbert</cite></footer>
+> <footer>Dogbert in <cite>Dilbert</cite></footer>
 
-```java:helloworld.java
+```java
 public class Main {
     public static void main(String[] args) {
         System.out.println("hello, world");

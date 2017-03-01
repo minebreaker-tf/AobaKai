@@ -32,12 +32,19 @@ declare namespace Marked {
              * @param text
              */
             link(href: string, title: string, text: string): string
+
+            code(code: string, lang: string, escaped: boolean): string
+
+            options: any
         }
 
     }
 
+    type Highlight = (code: string, lang?: string) => string
+
     interface Options {
         renderer?: marked.Renderer
+        highlight?: Highlight
     }
 
 }
