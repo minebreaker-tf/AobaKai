@@ -37,6 +37,6 @@ public class Main {
 
 [XKCD](http://xkcd.com)  
 
-| A  | B  | C  |
-|:---|---:|:--:|
-| 1  | 2  | 3  |
+| ABC | DEF | GHI |
+|:----|----:|:---:|
+| 123 | 456 | 789 |

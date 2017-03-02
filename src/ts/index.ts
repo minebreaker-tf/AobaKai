@@ -2,26 +2,58 @@ import Vue = require('vue');
 import VueRouter = require('vue-router');
 
 import articleView from './article';
+import { navi } from './nav';
 
 Vue.use(VueRouter);
 
-const root: any = {
+interface RootState extends Vue {
+    title: string
+}
+
+const root: Vue.ComponentOptions<RootState> = {
     name: 'root',
     template: `
     <div>
-        <article-view></article-view>
-        <!--<router-link to="home">Home</router-link>-->
+        <article-view :site="title"></article-view>
+        <navi></navi>
     </div>`,
     components: {
-        articleView
+        articleView,
+        navi
+    },
+    data: () => {
+        return {
+            title: ''
+        };
+    },
+    beforeCreate: function () {
+        fetch('content/setting.json').then(response => {
+            if (response.ok) {
+                response.json().then(setting => {
+                    this.title = setting.title;
+                });
+            } else {
+                console.error('Failed to load setting.json');
+                console.error(response);
+            }
+        });
     }
 };
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
+        { path: '/index.html', redirect: '/' },
+        { path: '/index.htm', redirect: '/' },
         { path: '*', component: root }
-    ]
+    ],
+    scrollBehavior: (to, from, savedPosition) => {
+        if (savedPosition) {
+            return savedPosition
+        } else {
+            return { x: 0, y: 0 }
+        }
+    }
 });
 
 new Vue({ router }).$mount('#app');

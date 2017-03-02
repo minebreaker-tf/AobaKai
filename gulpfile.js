@@ -2,26 +2,21 @@ const gulp = require('gulp');
 const ts = require('gulp-typescript');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
-var rimraf = require('rimraf');
+const rimraf = require('rimraf');
+const minify = require('gulp-minify');
+const cleanCSS = require('gulp-clean-css');
+const rename = require('gulp-rename');
+const replace = require('gulp-replace');
 
 gulp.task('clean', function (callback) {
     return rimraf('./public', callback);
 });
 
 gulp.task('env', function () {
-    // process.env.NODE_ENV = 'production'; // Vueはminifyしないとだめらしい
+    process.env.NODE_ENV = 'production';
 });
 
-gulp.task('copy', function () {
-    gulp.src(['src/ts/index.html', 'src/ts/index.css'])
-        .pipe(gulp.dest('./public/'));
-    gulp.src('content/*')
-        .pipe(gulp.dest('./public/content'));
-    gulp.src('content/subdir/*')
-        .pipe(gulp.dest('./public/content/subdir'));
-});
-
-gulp.task('compile', ['env'], function () {
+gulp.task('compile', function () {
     const tsProject = ts.createProject('tsconfig.json');
 
     //noinspection JSUnresolvedFunction
@@ -50,9 +45,48 @@ gulp.task('browserify', ['compile'], function () {
     })
         .bundle()
         .pipe(source('index.js'))
+        .pipe(gulp.dest('./build/'));
+});
+
+gulp.task('minify-js', ['browserify'], function () {
+    return gulp.src('./build/index.js')
+        .pipe(minify({
+            ext: {
+                min: '.min.js'
+            }
+        }))
+        .pipe(gulp.dest('./build/'));
+});
+
+gulp.task('minify-css', [], function () {
+    return gulp.src('src/ts/*.css')
+        .pipe(cleanCSS())
+        .pipe(rename({
+            suffix: '.min'
+        }))
+        .pipe(gulp.dest('./build/'));
+});
+
+gulp.task('copy-dev', function () {
+    gulp.src(['src/ts/index.html', 'src/ts/index.css', 'build/index.js'])
+        .pipe(gulp.dest('./public/'));
+    gulp.src('content/*')
+        .pipe(gulp.dest('./public/content'));
+    gulp.src('content/subdir/*')
+        .pipe(gulp.dest('./public/content/subdir'));
+});
+
+gulp.task('copy-prod', ['minify-js', 'minify-css'], function () {
+    gulp.src('src/ts/index.html')
+        .pipe(replace('index.js', 'index.min.js'))
+        .pipe(replace('index.css', 'index.min.css'))
+        .pipe(gulp.dest('./public/'));
+    gulp.src(['build/index.min.css', 'build/index.min.js'])
         .pipe(gulp.dest('./public/'));
 });
 
-gulp.task('build', ['env', 'compile', 'browserify', 'copy']);
+gulp.task('dev-build', ['compile', 'browserify', 'copy-dev']);
+
+gulp.task('build', ['env', 'compile', 'browserify', 'minify-js', 'minify-css', 'copy-prod']);
 
 gulp.task('default', ['build']);

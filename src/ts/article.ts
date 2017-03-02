@@ -4,20 +4,26 @@ import highlight = require('highlight.js');
 
 interface ArticleTitleData extends Vue {
     title: string
+    site: string
 }
 
 const articleTitle: Vue.ComponentOptions<ArticleTitleData> = {
     name: 'article-title',
-    props: ['title'],
-    template: `<h1>{{ title }}</h1>`,
+    props: ['site', 'title'],
+    template: `
+    <div>
+        <h2 class="site">{{ site }}</h2>
+        <h1>{{ title }}</h1>
+    </div>`,
     watch: {
         'title': function () {
-            document.getElementsByTagName('title').item(0).text = this.title + ' - AobaKai'; // TODO global state
+            document.getElementsByTagName('title').item(0).text = this.title + ' - ' + this.site;
         }
     }
 };
 
 interface ArticleContentData extends Vue {
+    site: string;
     title: string
     url: string
     articleContent: Vue.Component
@@ -26,7 +32,7 @@ interface ArticleContentData extends Vue {
 type ArticleSetter = (articleContent: Vue.Component) => void;
 type ArticleTitleSetter = (title: string) => void;
 
-const requestArticle = function (path: string, setter: ArticleSetter, titleSetter: ArticleTitleSetter) {
+const requestArticle = (path: string, setter: ArticleSetter, titleSetter: ArticleTitleSetter) => {
     const index = path === '/' ? 'index' : '';
     const addr = '/content' + path + index;
 
@@ -64,15 +70,15 @@ const requestArticle = function (path: string, setter: ArticleSetter, titleSette
 
 const articleView: Vue.ComponentOptions<ArticleContentData> = {
     name: 'article-view',
-    props: [],
+    props: ['site'],
     template: `
-    <div>
-        <article-title :title="title"></article-title>
+    <div class="container root">
+        <article-title :site="site" :title="title"></article-title>
         <component v-bind:is="articleContent"></component>
     </div>`,
     data: () => {
         return {
-            title: 'hoge',
+            title: '',
             articleContent: {
                 name: 'default-article-content',
                 template: '<div></div>'
@@ -100,26 +106,21 @@ const articleView: Vue.ComponentOptions<ArticleContentData> = {
     }
 };
 
+// http://stackoverflow.com/questions/10687099/how-to-test-if-a-url-string-is-absolute-or-relative
+const rAbsoluteUrl = /^(?:[a-z]+:)?\/\//;
+
 // エスケープ処理は実装しないので注意
 class ModifiedRenderer extends marked.Renderer {
 
     link(href: string, title: string, text: string): string {
 
-        // スラッシュで始まるURLは内部のリンクとみなし、Vueコンポーネントを利用する
-        if (href.charAt(0) === '/') {
-            let out = '<router-link to="' + href + '"';
-            if (title) {
-                out += ' title="' + title + '"';
-            }
-            out += '>' + text + '</router-link>';
-            return out;
+        const titleAttr = title ? ` title="${title}"` : '';
+
+        // 相対URLの場合、Vueコンポーネントを利用する
+        if (rAbsoluteUrl.test(href)) {
+            return `<a href="${href}"${titleAttr} target="_blank">${text}</a>`;
         } else {
-            let out = '<a href="' + href + '"';
-            if (title) {
-                out += ' title="' + title + '"';
-            }
-            out += ' target="_blank">' + text + '</a>';
-            return out;
+            return `<router-link to="${href}"${titleAttr}>${text}</router-link>`;
         }
     }
 
@@ -139,20 +140,12 @@ class ModifiedRenderer extends marked.Renderer {
             }
         };
 
-        const highlighted = hilight();
-
-        if (!lang) {
-            return '<pre><code>'
-                + highlighted
-                + '\n</code></pre>';
+        if (lang) {
+            return `<pre class="hljs"><code class="${this.options.langPrefix}${lang}">${hilight()}\n</code></pre>\n`;
+        } else {
+            return `<pre><code>${hilight()}\n</code></pre>`;
         }
 
-        return '<pre class="hljs"><code class="'
-            + this.options.langPrefix
-            + lang
-            + '">'
-            + highlighted
-            + '\n</code></pre>\n';
     }
 }
 
