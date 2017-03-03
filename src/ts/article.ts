@@ -1,6 +1,7 @@
 import Vue = require('vue');
 import marked = require('marked');
 import highlight = require('highlight.js');
+import config from './config';
 
 interface ArticleTitleData extends Vue {
     title: string
@@ -33,8 +34,12 @@ type ArticleSetter = (articleContent: Vue.Component) => void;
 type ArticleTitleSetter = (title: string) => void;
 
 const requestArticle = (path: string, setter: ArticleSetter, titleSetter: ArticleTitleSetter) => {
+    // 末尾にスラッシュを追加する
+    const base = config.base.charAt(config.base.length - 1) === '/' ?
+        config.base :
+        config.base + '/';
     const index = path === '/' ? 'index' : '';
-    const addr = '/content' + path + index;
+    const addr = base + 'content' + path + index;
 
     // target = es5 だとPromise.allが使えない... Babelいれる?
     fetch(addr + '.md')
