@@ -8,6 +8,8 @@ const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 
+const base = 'web/';
+
 gulp.task('clean', function (callback) {
     return rimraf('./public', callback);
 });
@@ -78,8 +80,8 @@ gulp.task('copy-dev', function () {
 
 gulp.task('copy-prod', ['minify-js', 'minify-css'], function () {
     gulp.src('src/ts/index.html')
-        .pipe(replace('index.js', 'index.min.js'))
-        .pipe(replace('index.css', 'index.min.css'))
+        .pipe(replace('index.js', base + 'index.min.js'))
+        .pipe(replace('index.css', base + 'index.min.css'))
         .pipe(gulp.dest('./public/'));
     gulp.src(['build/index.min.css', 'build/index.min.js'])
         .pipe(gulp.dest('./public/'));
