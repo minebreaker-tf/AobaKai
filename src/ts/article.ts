@@ -51,7 +51,7 @@ const requestArticle = (path: string, setter: ArticleSetter, titleSetter: Articl
             }
         })
         .then(t => {
-            const raw = '<div>' + marked(t, { renderer: new ModifiedRenderer() });
+            const raw = marked(t, { renderer: new ModifiedRenderer() });
             setter({
                 name: 'article-content',
                 template: `<div> ${raw} </div>`
