@@ -8,14 +8,15 @@ const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 
-const base = 'web/';
+const base = 'AobaKai/public/';
+// const base = 'web/';
 
 gulp.task('clean', function (callback) {
     return rimraf('./public', callback);
 });
 
 gulp.task('env', function () {
-    process.env.NODE_ENV = 'production';
+    process.env.NODE_ENV = '"production"';
 });
 
 gulp.task('compile', function () {
@@ -31,6 +32,7 @@ gulp.task('compile', function () {
             this.failed && process.exit(1);
         })
         .js
+        .pipe(replace('${BASE_URL}', base))
         .pipe(gulp.dest('./build/ts/'));
 });
 
@@ -71,6 +73,8 @@ gulp.task('minify-css', [], function () {
 
 gulp.task('copy-dev', function () {
     gulp.src(['src/ts/index.html', 'src/ts/index.css', 'build/index.js'])
+        .pipe(replace('index.js', base + 'index.js'))
+        .pipe(replace('index.css', base + 'index.css'))
         .pipe(gulp.dest('./public/'));
     gulp.src('content/*')
         .pipe(gulp.dest('./public/content'));
