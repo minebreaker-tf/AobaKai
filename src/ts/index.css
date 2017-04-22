@@ -31,10 +31,12 @@ table, th, td {
     border-collapse: collapse;
     padding: 0.4em;
 }
+
 th {
     color: white;
     background-color: darkslategray
 }
+
 td {
     background-color: lightgray
 }
@@ -47,21 +49,27 @@ pre {
 pre::-webkit-scrollbar {
     width: 8px;
 }
+
 pre::-webkit-scrollbar:horizontal {
     height: 8px;
 }
+
 pre::-webkit-scrollbar-button {
     display: none;
 }
+
 pre::-webkit-scrollbar-track-piece {
     background: darkslategray;
 }
+
 pre::-webkit-scrollbar-thumb {
     background: lightgray;
 }
+
 pre::-webkit-scrollbar-thumb:hover {
     background: gray;
 }
+
 pre::-webkit-scrollbar-corner {
     display: none;
 }
@@ -103,7 +111,16 @@ blockquote {
 /* ページ上部のサイト名の表示 */
 .site {
     padding-right: 1em;
-    text-align: right
+    text-align: right;
+}
+
+.site-link {
+    color: black;
+    text-decoration: none;
+}
+
+.site-link:hover {
+    background-color: white;
 }
 
 .visible-phone {

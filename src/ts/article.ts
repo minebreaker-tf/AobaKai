@@ -13,7 +13,7 @@ const articleTitle: Vue.ComponentOptions<ArticleTitleData> = {
     props: ['site', 'title'],
     template: `
     <div>
-        <h2 class="site">{{ site }}</h2>
+        <h2 class="site"><router-link to="/" active-class="site-link">{{ site }}</router-link></h2>
         <h1>{{ title }}</h1>
     </div>`,
     watch: {
