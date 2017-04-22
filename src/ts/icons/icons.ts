@@ -11,7 +11,7 @@ export const homeIcon: Vue.ComponentOptions<Vue> = {
             :width="size"
             :height="size"
             viewBox="0 0 48 48"
-            fill-opacity="0.8">
+            fill-opacity="0.4">
         <path d="M20 40V28h8v12h10V24h6L24 6 4 24h6v16z"/>
     </svg>`
 };
@@ -24,7 +24,7 @@ export const upArrowIcon: Vue.ComponentOptions<Vue> = {
             :width="size"
             :height="size"
             viewBox="0 0 48 48"
-            fill-opacity="0.8">
+            fill-opacity="0.4">
         <path d="M14.83 30.83L24 21.66l9.17 9.17L36 28 24 16 12 28z"/>
     </svg>`
 };
