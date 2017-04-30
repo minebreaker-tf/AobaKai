@@ -14,6 +14,7 @@ body {
     color: black;
     background-color: white;
     overflow-wrap: break-word;
+    padding-bottom: 50px; /* 下部ナビゲーションバーの分 */
 }
 
 a {
@@ -41,6 +42,7 @@ td {
     background-color: lightgray
 }
 
+/* ソースコードは折り返さない */
 pre {
     word-break: keep-all;
 }
@@ -122,6 +124,8 @@ blockquote {
 .site-link:hover {
     background-color: white;
 }
+
+/* ページ下部のナビゲーションアイコン */
 
 .visible-phone {
     display: none !important;
