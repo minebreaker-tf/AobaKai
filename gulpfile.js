@@ -71,7 +71,7 @@ gulp.task('minify-css', [], function () {
         .pipe(gulp.dest('./build/'));
 });
 
-gulp.task('copy-dev', function () {
+gulp.task('copy-dev', ['browserify'], function () {
     gulp.src(['src/ts/index.html', 'src/ts/index.css', 'build/index.js'])
         .pipe(replace('index.js', base + 'index.js'))
         .pipe(replace('index.css', base + 'index.css'))
