@@ -92,6 +92,10 @@ pre::-webkit-scrollbar-corner {
     }
 }
 
+.inlined {
+    display: inline;
+}
+
 blockquote {
     border-left: 3px solid black;
     padding-left: 10px;
@@ -149,6 +153,12 @@ blockquote {
 
 .nav-phone {
     position: fixed;
-    right: 1em;
-    bottom: 1em;
+    right: 16px;
+    bottom: 16px;
+}
+
+.font-size-icon-popup {
+    position: relative;
+    bottom: 48px;
+    right: -116px;
 }
