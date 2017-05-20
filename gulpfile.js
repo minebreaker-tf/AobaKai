@@ -72,9 +72,11 @@ gulp.task('minify-css', [], function () {
 });
 
 gulp.task('copy-dev', ['browserify'], function () {
-    gulp.src(['src/ts/index.html', 'src/ts/index.css', 'build/index.js'])
+    gulp.src('src/ts/index.html')
         .pipe(replace('index.js', base + 'index.js'))
         .pipe(replace('index.css', base + 'index.css'))
+        .pipe(gulp.dest('./public/'));
+    gulp.src(['src/ts/index.css', 'src/ts/index-dark.css', 'build/index.js'])
         .pipe(gulp.dest('./public/'));
     gulp.src('content/*')
         .pipe(gulp.dest('./public/content'));
@@ -87,7 +89,7 @@ gulp.task('copy-prod', ['minify-js', 'minify-css'], function () {
         .pipe(replace('index.js', base + 'index.min.js'))
         .pipe(replace('index.css', base + 'index.min.css'))
         .pipe(gulp.dest('./public/'));
-    gulp.src(['build/index.min.css', 'build/index.min.js'])
+    gulp.src(['build/index.min.css', 'build/index-dark.min.css', 'build/index.min.js'])
         .pipe(gulp.dest('./public/'));
 });
 
