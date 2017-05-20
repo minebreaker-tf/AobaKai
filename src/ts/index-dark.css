@@ -1,0 +1,71 @@
+body {
+    color: white;
+    background-color: black;
+}
+
+a {
+    color: gray;
+}
+
+a:hover {
+    color: darkslategray;
+    background-color: lightgray;
+}
+
+table, th, td {
+    border-color: white;
+}
+
+th {
+    color: white;
+    background-color: darkslategray
+}
+
+td {
+    background-color: lightgray
+}
+
+pre::-webkit-scrollbar-track-piece {
+    background: darkslategray;
+}
+
+pre::-webkit-scrollbar-thumb {
+    background: lightgray;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+    background: gray;
+}
+
+pre::-webkit-scrollbar-corner {
+    display: none;
+}
+
+blockquote {
+    border-left: 3px solid black;
+    padding-left: 10px;
+}
+
+.site-link {
+    color: black;
+    text-decoration: none;
+}
+
+.site-link:hover {
+    background-color: white;
+}
+
+.icon {
+    fill: white;
+    background-color: black;
+}
+
+.icon-theme-normal {
+    fill: black;
+    background-color: white;
+}
+
+.icon-theme-dark {
+    fill: white;
+    background-color: black;
+}

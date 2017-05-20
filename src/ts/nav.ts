@@ -1,6 +1,7 @@
 import Vue = require('vue');
 
-import { homeIcon, upArrowIcon, fontSizeIcon } from './icons/icons';
+import config from "./config";
+import { homeIcon, upArrowIcon, fontSizeIcon, paletteIcon } from './icons/icons';
 
 const navPc: Vue.ComponentOptions<Vue> = {
     name: 'nav-pc',
@@ -24,42 +25,43 @@ const navPc: Vue.ComponentOptions<Vue> = {
     }
 };
 
-interface FontSizeData extends Vue {
+interface Clickable extends Vue {
     clicked: boolean
+    show: string
 }
 
-const fontSize: Vue.ComponentOptions<FontSizeData> = {
+const fontSize: Vue.ComponentOptions<Clickable> = {
     name: 'font-size',
     template: `
     <div class="inlined">
         <div class="inlined font-size-icon-popup" v-if="clicked">
-            <div class="inlined" v-on:click="setFontSize('80%')">
-                <font-size-icon size="36"></font-size-icon>
+            <div class="inlined cursor-pointer" v-on:click="setFontSize('80%')">
+                <font-size-icon size="36" clazz="icon"></font-size-icon>
             </div>
-            <div class="inlined" v-on:click="setFontSize('100%')">
-                <font-size-icon size="48"></font-size-icon>
+            <div class="inlined cursor-pointer" v-on:click="setFontSize('100%')">
+                <font-size-icon size="48" clazz="icon"></font-size-icon>
             </div>
-            <div class="inlined" v-on:click="setFontSize('130%')">
-                <font-size-icon size="60"></font-size-icon>
+            <div class="inlined cursor-pointer" v-on:click="setFontSize('130%')">
+                <font-size-icon size="60" clazz="icon"></font-size-icon>
             </div>
         </div>
-        <div class="inlined" v-on:click="toggleMenu">
-            <font-size-icon size="48"></font-size-icon>
+        <div class="inlined cursor-pointer" v-on:click="toggleMenu">
+            <font-size-icon size="48" clazz="icon"></font-size-icon>
         </div>
     </div>`,
-    data: function () {
-        return {
-            clicked: false
-        };
+    props: ['show'],
+    computed: {
+        clicked: function () {
+            return this.show == 'fontSize';
+        }
     },
     methods: {
         toggleMenu: function () {
-            this.clicked = !this.clicked;
+            this.$emit('pop', this.clicked ? '' : 'fontSize');
         },
         setFontSize: function (size) {
-            console.log("size: " + size);
             document.body.style.fontSize = size;
-            this.clicked = false;
+            this.$emit('pop', '');
         }
     },
     components: {
@@ -67,15 +69,70 @@ const fontSize: Vue.ComponentOptions<FontSizeData> = {
     }
 };
 
-const navPhone: Vue.ComponentOptions<Vue> = {
+const theme: Vue.ComponentOptions<Clickable> = {
+    name: 'theme',
+    template: `
+    <div class="inlined">
+        <div class="inlined theme-icon-popup" v-if="clicked">
+            <div class="inlined cursor-pointer" v-on:click="setStyleSheet('index.css')">
+                <palette-icon size="48" clazz="icon-theme-normal"></palette-icon>
+            </div>
+            <div class="inlined cursor-pointer" 
+                    v-on:click="setStyleSheet('index-dark.css')" 
+                    title="Dark theme is an beta feature.">
+                <palette-icon size="48" clazz="icon-theme-dark"></palette-icon>
+            </div>
+        </div>
+        <div class="inlined cursor-pointer" v-on:click="toggleMenu">
+            <palette-icon size="48" clazz="icon" opacity="0.4"></palette-icon>
+        </div>
+    </div>`,
+    props: ['show'],
+    computed: {
+        clicked: function () {
+            return this.show == 'theme';
+        }
+    },
+    methods: {
+        toggleMenu: function () {
+            this.$emit('pop', this.clicked ? '' : 'theme');
+        },
+        setStyleSheet: function (name) {
+            const url = config.base + name;
+            const link = document.createElement('link');
+            link.setAttribute('rel', 'stylesheet');
+            link.setAttribute('type', 'text/css');
+            link.setAttribute('href', url);
+            document.head.appendChild(link);
+            this.$emit('pop', '');
+        }
+    },
+    components: {
+        paletteIcon
+    }
+};
+
+const navPhone: Vue.ComponentOptions<any> = {
     name: 'nav-phone',
     template: `
     <div class="nav-phone">
-        <font-size></font-size>
-        <router-link to="/"><home-icon size="48"></home-icon></router-link>
-        <a href="#"><up-arrow-icon size="48"></up-arrow-icon></a>
+        <theme :show="target" v-on:pop="show"></theme>
+        <font-size :show="target" v-on:pop="show"></font-size>
+        <router-link to="/"><home-icon size="48" clazz="icon"></home-icon></router-link>
+        <a href="#"><up-arrow-icon size="48" clazz="icon"></up-arrow-icon></a>
     </div>`,
+    data: function () {
+        return {
+            target: ''
+        }
+    },
+    methods: {
+        show: function (target) {
+            this.target = target;
+        }
+    },
     components: {
+        theme,
         fontSize,
         homeIcon,
         upArrowIcon

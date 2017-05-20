@@ -157,8 +157,33 @@ blockquote {
     bottom: 16px;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
 .font-size-icon-popup {
-    position: relative;
-    bottom: 48px;
-    right: -116px;
+    position: fixed;
+    bottom: 64px;
+    right: 54px;
+}
+
+.theme-icon-popup {
+    position: fixed;
+    bottom: 64px;
+    right: 118px;
+}
+
+.icon {
+    fill: black;
+    background-color: white;
+}
+
+.icon-theme-normal {
+    fill: black;
+    background-color: white;
+}
+
+.icon-theme-dark {
+    fill: white;
+    background-color: black;
 }
