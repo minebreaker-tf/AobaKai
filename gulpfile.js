@@ -93,7 +93,11 @@ gulp.task('copy-prod', ['minify-js', 'minify-css'], function () {
         .pipe(replace('index.js', base + 'index.min.js'))
         .pipe(replace('index.css', base + 'index.min.css'))
         .pipe(gulp.dest('./public/'));
-    gulp.src(['build/index.min.css', 'build/index-dark.min.css', 'build/index.min.js'])
+    gulp.src(['build/index.min.css', 'build/index-dark.min.css'])
+        .pipe(gulp.dest('./public/'));
+    gulp.src('build/index.min.js')
+        .pipe(replace('index.css', 'index.min.css'))
+        .pipe(replace('index-dark.css', 'index-dark.min.css'))
         .pipe(gulp.dest('./public/'));
 });
 
