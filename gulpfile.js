@@ -8,8 +8,8 @@ const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 
-const base = 'AobaKai/public/';
-// const base = 'web/';
+// const base = 'AobaKai/public/';
+const base = 'web/';
 
 gulp.task('clean', function (callback) {
     return rimraf('./public', callback);
@@ -75,6 +75,10 @@ gulp.task('copy-dev', ['browserify'], function () {
     gulp.src('src/ts/index.html')
         .pipe(replace('index.js', base + 'index.js'))
         .pipe(replace('index.css', base + 'index.css'))
+        .pipe(gulp.dest('./public/'));
+    gulp.src('build/index.js')
+        .pipe(replace('index.css', 'index.min.css'))
+        .pipe(replace('index-dark.css', 'index-dark.min.css'))
         .pipe(gulp.dest('./public/'));
     gulp.src(['src/ts/index.css', 'src/ts/index-dark.css', 'build/index.js'])
         .pipe(gulp.dest('./public/'));

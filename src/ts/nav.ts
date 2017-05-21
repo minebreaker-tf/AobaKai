@@ -115,7 +115,7 @@ const theme: Vue.ComponentOptions<Clickable> = {
 const navPhone: Vue.ComponentOptions<any> = {
     name: 'nav-phone',
     template: `
-    <div class="nav-phone">
+    <div class="nav-phone transparent">
         <theme :show="target" v-on:pop="show"></theme>
         <font-size :show="target" v-on:pop="show"></font-size>
         <router-link to="/"><home-icon size="48" clazz="icon"></home-icon></router-link>

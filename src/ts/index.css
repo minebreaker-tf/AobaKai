@@ -173,9 +173,12 @@ blockquote {
     right: 118px;
 }
 
+.transparent {
+    background-color: transparent;
+}
+
 .icon {
     fill: black;
-    background-color: white;
 }
 
 .icon-theme-normal {
