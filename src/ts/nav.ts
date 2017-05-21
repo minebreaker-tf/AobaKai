@@ -79,7 +79,7 @@ const theme: Vue.ComponentOptions<Clickable> = {
             </div>
             <div class="inlined cursor-pointer" 
                     v-on:click="setStyleSheet('index-dark.css')" 
-                    title="Dark theme is an beta feature.">
+                    title="Dark theme is a beta feature.">
                 <palette-icon size="48" clazz="icon-theme-dark"></palette-icon>
             </div>
         </div>
