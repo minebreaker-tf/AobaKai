@@ -8,8 +8,8 @@ const cleanCSS = require('gulp-clean-css');
 const rename = require('gulp-rename');
 const replace = require('gulp-replace');
 
-// const base = 'AobaKai/public/';
-const base = 'web/';
+const base = 'AobaKai/public/';
+// const base = 'web/';
 
 gulp.task('clean', function (callback) {
     return rimraf('./public', callback);

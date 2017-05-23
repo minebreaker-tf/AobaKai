@@ -2,29 +2,34 @@ import Vue = require('vue');
 import VueRouter = require('vue-router');
 
 import articleView from './article';
-import {navi} from './nav';
+import notification from './notification';
+import { navi } from './nav';
 import config from './config';
 
 Vue.use(VueRouter);
 
 interface RootState extends Vue {
     title: string
+    notification: string
 }
 
 const root: Vue.ComponentOptions<RootState> = {
     name: 'root',
     template: `
     <div>
+        <notification :notification="notification"></notification>
         <article-view :site="title"></article-view>
         <navi></navi>
     </div>`,
     components: {
         articleView,
-        navi
+        navi,
+        notification
     },
     data: () => {
         return {
-            title: ''
+            title: '',
+            notification: ''
         };
     },
     beforeCreate: function () {
@@ -32,6 +37,7 @@ const root: Vue.ComponentOptions<RootState> = {
             if (response.ok) {
                 response.json().then(setting => {
                     this.title = setting.title;
+                    this.notification = setting.notification;
                 });
             } else {
                 console.error('Failed to load settings.json');
