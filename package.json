@@ -15,26 +15,21 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@types/vue": "^2.0.0",
-    "@types/vue-router": "^2.0.0",
     "highlight.js": "^9.9.0",
     "marked": "^0.3.6",
-    "vue": "^2.1.10",
-    "vue-router": "^2.2.1"
+    "vue": "^2.3.3",
+    "vue-router": "^2.5.3"
   },
   "devDependencies": {
-    "browserify": "^14.1.0",
     "gulp": "^3.9.1",
     "gulp-clean-css": "^3.0.3",
-    "gulp-minify": "0.0.15",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "gulp-typescript": "^3.1.5",
+    "gulp-uglify": "^3.0.0",
     "rimraf": "^2.6.1",
     "typescript": "^2.2.1",
-    "vinyl-source-stream": "^1.1.0"
-  },
-  "browser": {
-    "vue": "vue/dist/vue.common"
+    "vueify": "^9.4.1",
+    "webpack-stream": "^3.2.0"
   }
 }
