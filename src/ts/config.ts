@@ -6,7 +6,7 @@ interface Config {
 }
 
 const config: Config = {
-    base: '/${BASE_URL}' // Base url, witch is replaced by Gulp.
+    base: '/${BASE_URL}' // Base url, which is replaced by Gulp.
 };
 
 export default config;
